@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Campagne;
+use App\Carte;
+use App\Com;
+use App\UserClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CarteController extends Controller
 {
@@ -13,7 +18,26 @@ class CarteController extends Controller
      */
     public function index()
     {
-        //
+        $commune = Com::all();
+        $visuel = 0;
+
+        if (Auth::user()->hasRole('Admin'))
+        {
+            $campagne = Campagne::all();
+        }
+        else{
+
+            $user_id = Auth::user()->id;
+            //dd($user_id);
+            $user_client = UserClient::where('user_id', '=', $user_id)->first();
+            //dd($user_client);
+            $client_id = $user_client->client_id;
+
+            $campagne = Campagne::where('Code_Client', '=',$client_id )->get();
+            //dd($campagne);
+
+        }
+        return view('cartes.index', compact('commune','campagne','visuel'));
     }
 
     /**
@@ -80,5 +104,107 @@ class CarteController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function bycommune(Request $request)
+    {
+        $id = $request->input('commune');
+        $idcampagne = $request->input('campagne');
+        $v = new Carte();
+        $commune = Com::all();
+        $campagne = Campagne::all();
+        $user_id = Auth::user()->id;
+        $user_client = UserClient::where('user_id', '=', $user_id)->first();
+
+
+        if (Auth::user()->hasRole('User'))
+        {
+            $client_id = $user_client->client_id;
+            if ($id == 0 && $idcampagne == 0)
+            {
+
+                return redirect()->route('cartes.index');
+
+            }
+
+            else
+            {
+                if ($id != 0 && $idcampagne != 0)
+                {
+                    $visuel = $v->allVisuels($client_id, $idcampagne, $id);
+                    $cs = Com::find($id);
+                    $cm = Campagne::find($idcampagne);
+                }
+                else{
+                    if ($id == 0 && $idcampagne !=0)
+                    {
+                        $visuel = $v->allVisuelsAllCommunes($client_id,$idcampagne);
+                        $cs = new Com();
+                        $cs->id = 0;
+                        $cs->name = 'All communes';
+                        $cm = Campagne::find($idcampagne);
+                    }
+                    else{
+
+                        $visuel = $v->allVisuelsAllCampagne($client_id,$id);
+                        $cm = new Campagne();
+                        $cm->code = 0;
+                        $cm->libelle = 'All campagnes';
+                        $cs = Commune::find($id);
+                    }
+                }
+            }
+
+            //return view('cartes.filter', compact('commune', 'visuel', 'cs', 'cm', 'campagne'));
+        }
+
+        else{
+
+            if ($id == 0 && $idcampagne == 0)
+            {
+
+                return redirect()->route('cartes.index');
+
+            }
+
+            else
+            {
+                if ($id != 0 && $idcampagne != 0)
+                {
+                    $visuel = $v->allVisuelsNoClient( $idcampagne, $id);
+                    $cs = Com::find($id);
+                    $cm = Campagne::find($idcampagne);
+                }
+                else{
+                    if ($id == 0 && $idcampagne !=0)
+                    {
+                        $visuel = $v->allVisuelsNoClientAllCommunes($idcampagne);
+                        $cs = new Com();
+                        $cs->id = 0;
+                        $cs->name = 'All communes';
+                        $cm = Campagne::find($idcampagne);
+                    }
+                    else{
+
+                        $visuel = $v->allVisuelsAllNoClientCampagne($id);
+                        $cm = new Campagne();
+                        $cm->code = 0;
+                        $cm->libelle = 'All campagnes';
+                        $cs = Commune::find($id);
+                    }
+                }
+            }
+
+            //return view('cartes.filter', compact('commune', 'visuel', 'cs', 'cm', 'campagne'));
+        }
+
+        return view('cartes.filter', compact('commune', 'visuel', 'cs', 'cm', 'campagne'));
+
+
+
+
+
+
+
     }
 }

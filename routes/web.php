@@ -36,8 +36,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
 
+    Route::get('maps/bycommune', 'CarteController@bycommune')->name('maps.bycommune');
+
     Route::post('/getuser', 'ProfileController@getuser')->name('getuser');
     Route::get('/list', 'ProfileController@index')->name('user.list');
+
 
     Route::get('/userList', 'UserController@usersList')->name('user.list');
     Route::post('/visuelList', 'VisuelController@visuelList')->name('visuel.list');

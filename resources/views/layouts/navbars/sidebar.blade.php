@@ -14,32 +14,32 @@
                 <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="media align-items-center">
                         <span class="avatar avatar-sm rounded-circle">
-                        <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/team-4-800x800.jpg">
+                        <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/user.jpg">
                         </span>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
                     <div class=" dropdown-header noti-title">
-                        <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6>
+                        <h6 class="text-overflow m-0">{{ __('Bienvenue !') }}</h6>
                     </div>
 
 
                     <a href="{{ route('profile.edit') }}" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
-                        <span>{{ __('My profile') }}</span>
+                        <span>{{ __('Mon profile') }}</span>
                     </a>
                     <a href="#" class="dropdown-item">
                         <i class="ni ni-settings-gear-65"></i>
-                        <span>{{ __('Settings') }}</span>
+                        <span>{{ __('Paramètres') }}</span>
                     </a>
-                    <a href="#" class="dropdown-item">
+                   {{-- <a href="#" class="dropdown-item">
                         <i class="ni ni-calendar-grid-58"></i>
-                        <span>{{ __('Activity') }}</span>
+                        <span>{{ __('Activités') }}</span>
                     </a>
                     <a href="#" class="dropdown-item">
                         <i class="ni ni-support-16"></i>
                         <span>{{ __('Support') }}</span>
-                    </a>
+                    </a>--}}
                     <div class="dropdown-divider"></div>
                     <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <!-- Form -->
-            <form class="mt-4 mb-3 d-md-none">
+      {{--      <form class="mt-4 mb-3 d-md-none">
                 <div class="input-group input-group-rounded input-group-merge">
                     <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="{{ __('Search') }}" aria-label="Search">
                     <div class="input-group-prepend">
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form>--}}
             <!-- Navigation -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -153,7 +153,7 @@
 
                 @endrole
 
-                @role('User')
+                {{--@role('User')--}}
                     @can('view_visuels')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('visuels.index') }}">
@@ -169,7 +169,7 @@
                             </a>
                         </li>
                     @endcan
-                @endrole
+               {{-- @endrole--}}
                           {{--  <li class="nav-item mb-5" style="position: absolute; bottom: 0;">
                                 <a class="nav-link" href="https://www.creative-tim.com/product/argon-dashboard-pro-laravel" target="_blank">
                                     <i class="ni ni-cloud-download-95"></i> Upgrade to PRO

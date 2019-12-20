@@ -1,186 +1,238 @@
-{{--for use change your "modelName" ain plural to "models"--}}
-
-@extends('layouts.app', ['title' => __('User Management')])
-
-@section('title', 'Gestion des Models')
-
-@section('css')
-    <link href="{{ asset('vendor') }}/DataTables/datatables.css" rel="stylesheet">
-@endsection
 
 
-@section('content')
-    @include('layouts.headers.cards')
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="initial-scale=1.0"><meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>PIGE-PUB - Gestion des positions des visuels</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+
+    <link href="http://localhost:8000/argon/img/brand/favicon.png" rel="icon" type="image/png">
+
+    <link href="{{ asset('vendor') }}/select2/css/select2.min.css" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- My own Styles -->
+    <link href="{{ asset('css/mystyle.css') }}" rel="stylesheet">
+
+    <style>
+
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .label {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<br>
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-8">
+            <form method="GET" action="{{ route('maps.bycommune') }}">
+                <div class="form-group row mx-sm-2">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label text-left">Commune</label>
+                    <div class="col-sm-3">
+                        <select id="com" name="commune" class="form-control">
+
+                            @if($commune->count())
+
+                                <option value="0">All communes</option>
+
+                                @foreach ($commune as $communes)
+                                    <option value="{{$communes->id}}"  >{{$communes->name}}</option>
+                                @endforeach
+
+                            @endif
 
 
-    @role('Admin')
-    <div class="container-fluid mt--7">
-
-
-        <div class="card">
-
-            @include('flash-message')
-
-            <div class="card-header">
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <h3 class="modal-title">
-                            <button type="button" class="btn btn-primary">
-                                <strong>{{ str_plural('Models', $result->count()) }}</strong> <span class="badge badge-danger">{{ $result->count() }}</span>
-                            </button>
-                            {{--<span class="badge badge-secondary">{{ $result->total() }}
-                            </span> {{ str_plural('Utilisateur', $result->count()) }}--}}
-                        </h3>
+                        </select>
                     </div>
-                    <div class="col-md-4">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label text-left">Campagne</label>
+                    <div class="col-sm-3">
+                        <select id="cam" name="campagne" class="form-control">
 
+                            @if($campagne->count())
+
+                                <option value="0">All campagnes</option>
+
+                                @foreach ($campagne as $campagnes)
+                                    <option value="{{$campagnes->code}}"  >{{$campagnes->libelle}}</option>
+                                @endforeach
+
+                            @endif
+
+
+                        </select>
                     </div>
-                    <div class="col-md-4 page-action text-right">
-                        @can('add_models')
-                            <a href="{{ route('models.create') }}" class="btn btn-primary btn-sm"> <i class="material-icons">open_in_new</i> <b>Nouveau</b></a>
-                        @endcan
+
+                    <div class="col-sm-2">
+                        <button class="btn btn-md btn-primary btn-block" type="submit">Filtrer</button>
                     </div>
+
                 </div>
-
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm" id="data-table">
-                        <thead>
-                        <tr>
-                           {{-- <th>Id</th>
-                            <th>Nom</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Date Création</th>
-                            @can('edit_models', 'delete_models')
-                                <th class="text-center">Actions</th>
-                            @endcan--}}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{--@foreach($result as $item)
-                            <tr>
-                                <td>{{ $item->id }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->email }}</td>
-                                <td>{{ $item->roles->implode('name', ', ') }}</td>
-                                <td>{{ $item->created_at->toFormattedDateString() }}</td>
-
-                                @can('edit_models', 'delete_models')
-                                    <td class="text-center">
-                                        @include('models.shared._action', [
-                                            'entity' => 'models',
-                                            'id' => $item->id
-                                        ])
-                                    </td>
-                                @endcan
-                            </tr>
-                        @endforeach--}}
-                        </tbody>
-                    </table>
-
-
-                </div>
-            </div>
-
+            </form>
         </div>
 
-        @else
-            @include('error-permission')
-            @endrole
-            @include('layouts.footers.auth')
+        {{--<div class="col-md-4">
+
+        </div>--}}
+
+        <div class="col-md-3 page-action ">
+            <div class="row">
+                <h2><span class="badge badge-success">Total Visuel</span></h2>
+                <h2><span class="badge badge-primary">{{$visuel}}</span></h2>
+            </div>
+        </div>
+
+        <div class="col-md-1 page-action text-right">
+            <a href="{{ route('home') }}" class="btn btn-default btn-sm"> <i class="material-icons">backspace</i> Retour</a>
+        </div>
     </div>
-@endsection
+</div>
 
-@section('script')
-    <script src="{{ asset('vendor') }}/DataTables/datatables.js"></script>
+<div id="map" class="container"></div>
 
-    <script>
-        $(document).ready(function() {
-            $('#data-table').DataTable({
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('vendor') }}/select2/js/select2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
 
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
-                },
+        $("#com").select2({
 
-                "order": [[ 0, 'desc' ]],
-
-                pageLength: 5
-
-
-            });
-        } );
-    </script>
-
-
-    {{--   DataTable Server Side--}}
-    {{--<script>
-
-        $(document).ready( function () {
-            var table = $('#data-table').DataTable({
-
-                "sAjaxSource": "{{ route('user.list') }}",
-                "sAjaxDataProp": "",
-                "order": [ 0, "desc" ],
-                "aoColumnDefs": [
-
-                ],
-                "aoColumns": [
-
-                    { "mData": "id"},
-                    { "mData": "name" },
-                    { "mData": "email" },
-
-
-                    {
-                        "mData": null,
-                        "bSortable": false,
-                        "mRender": function(data, type, full) {
-                            return '<div class="dropdown">'+
-                                '                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                '                          <i class="fas fa-ellipsis-v"></i>'+
-                                '                        </a>'+
-                                '                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">'+
-                                '                          <a class="dropdown-item" href=/admin/livraisons/distributions/'+ full.id+'>'+'Enlever'+'</a>'+
-                                '                        </div>'
-                        }
-                    }
-                ],
-
-
-                language: {
-                    /*url: '//cdn.datatables.net/plug-ins/1.10.16/i18n/French.json'*/
-                    sProcessing: "Traitement en cours...",
-                    sSearch: "Rechercher&nbsp;:",
-                    sLengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
-                    sInfo: "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                    sInfoEmpty: "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-                    sInfoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                    sInfoPostFix: "",
-                    sLoadingRecords: "Chargement en cours...",
-                    sZeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                    sEmptyTable: "Aucune donn&eacute;e disponible dans le tableau",
-                    oPaginate: {
-                        sFirst: "Premier",
-                        sPrevious: "Pr&eacute;c&eacute;dent",
-                        sNext: "Suivant",
-                        sLast: "Dernier"
-                    },
-                    oAria: {
-                        sSortAscending: ": activer pour trier la colonne par ordre croissant",
-                        sSortDescending: ": activer pour trier la colonne par ordre d&eacute;croissant"
-                    }
-                },
-
-
-            })
         });
 
+        $("#cam").select2({
+
+        });
+
+    });
+</script>
+<script>
+    var markers = @json($visuel);
+
+    var map;
+    var infowindows;
+    var e = document.getElementById('com');
+    var id = e.options[e.selectedIndex].value;
+
+
+    function initMap() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 5.3819324, lng: -3.9192513},
+            zoom: 11
+
+        });
+
+        var marker = [];
+        var contentString =[];
+        var infowindow = [];
+        var url = '{{asset('storage/mesimages/')}}';
+
+        for(var i =0; i < markers.length; i++ ){
+            var location = new google.maps.LatLng(markers[i].latitude, markers[i].longitude);
+
+            marker[i] = new google.maps.Marker({
+
+                position : location,
+                title : markers[i].adresse,
+                map:map,
+                icon: {
+                    url: "http://maps.google.com/mapfiles/ms/icons/"+markers[i].marqueur+"-dot.png"
+                }
+
+            });
+            contentString[i] = '<div id="content">' +
+                '<div id = "site"' +
+                '</div>'+
+                '<h1 id = "firsthead" class="firstHeading">'+ markers[i].adresse +'</h1>'+
+                '<div id ="bodycontent">'+
+                '<p><b>Commune : </b>'  + markers[i].name +
+                '<br>'+
+                '<br>'+
+                '<img width="200" src="'+ url +'/'+markers[i].nameimage+'"/>'+
+                '</div>'+
+                '</div>';
+            infowindow[i] = new google.maps.InfoWindow({
+
+                content : contentString[i]
+            });
+
+            var monevent = marker[i];
+            google.maps.event.addListener(marker[i], 'click', (function (monevent, i) {
+
+                return function (){
+                    infowindow[i].open(map, marker[i]);
+                }
+            })(marker[i], i))
+
+        }
+
+    }
+
+
+    //google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+{{--<script>
+
+
+    $(document).ready(function () {
+
+        $('#com').change(function () {
+
+            /*$.get('maps/bycommune', function (data) {
+                console.log(data);
+            })*/
+
+
+
+          /*  var id = $(this).val();
+            $.get('maps/bycommune', [id])*/
 
 
 
 
-    </script>--}}
-@endsection
+
+           /* var idcommune = $(this).val();
+            $.ajax({
+                url: 'maps/bycommune',
+                type: 'GET',
+                data: { id: idcommune }
+            });
+            console.log(idcommune)*/
+        })
+
+    })
+</script>--}}
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFFwXNKrYiQnaL-6kPhBxqn3SPsZE7mr0&callback=initMap" async defer></script>
+
+<script>
+
+
+
+    //console.log(visuels);
+</script>
+
+
+</body>
+</html>

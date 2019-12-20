@@ -22,7 +22,7 @@
     @include('layouts.headers.cards')
 
 
-    @role('User')
+    {{--@role('User')--}}
     {{-- @hasrole('User', 'Admin')--}}
     {{--<div class="modal" tabindex="-1" role="dialog" id="mymodal">
         <div class="modal-dialog" role="document">
@@ -130,9 +130,9 @@
 
         </div>
 
-    @else
-        @include('error-permission')
-        @endrole
+   {{-- @else--}}
+        {{--@include('error-permission')--}}
+        {{--@endrole--}}
         {{--@endhasrole--}}
         @include('layouts.footers.auth')
 

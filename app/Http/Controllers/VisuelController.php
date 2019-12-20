@@ -237,9 +237,12 @@ class VisuelController extends Controller
      * @param  \App\Visuel  $visuel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Visuel $visuel)
+    public function destroy($id)
     {
-        //
+        $visuel = Visuel::find($id);
+        $v = $visuel->emplacement;
+        $visuel->delete();
+        return redirect()->route('visuels.index')->with('success', 'Visuel suprimé avec succès | '.$v);
     }
 
     public function visuelList(Request $request)

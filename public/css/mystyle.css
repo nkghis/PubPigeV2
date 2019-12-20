@@ -1,0 +1,15 @@
+/*text style*/
+/*body {
+    font-family: sans-serif;
+}*/
+/*material design icon test align middle with icon*/
+.material-icons, .icon-text, .icon-text-caps, .icon-text-tweaked {
+    vertical-align: middle;
+}
+.icon-text-caps, .icon-text-tweaked {
+    text-transform: uppercase;
+}
+.icon-text-tweaked {
+    position:relative;
+    top:1px;
+}
