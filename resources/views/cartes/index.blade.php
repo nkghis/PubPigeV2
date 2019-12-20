@@ -161,19 +161,59 @@
 
             });
             contentString[i] = '<div id="content">' +
-                '<div id = "site"' +
-                '</div>'+
-                '<h1 id = "firsthead" class="firstHeading">'+ markers[i].adresse +'</h1>'+
                 '<div id ="bodycontent">'+
-                '<p><b>Commune : </b>'  + markers[i].name +
-                '<br>'+
-                '<br>'+
-                '<img width="200" src="'+ url +'/'+markers[i].nameimage+'"/>'+
+                '<div class="thumbnail">'+
+                '<img width="350" src="'+ url +'/'+markers[i].image+'"/>'+
+                '<div class="caption">'+
+                '<table class="table table-sm table-bordered" >'+
+                '  <thead class="thead-light">'+
+                '    <tr>'+
+                '      '+
+                '      <th scope="col">Indicateur</th>'+
+                '      <th scope="col">Performances</th>'+
+                '      '+
+                '    </tr>'+
+                '  </thead>'+
+                '  <tbody>'+
+                '    '+
+                '    <tr>'+
+                '      <td><strong>Emplacement</strong></td>'+
+                '      <td>'+ markers[i].emplacement +'</td>'+
+                '    </tr>'+
+                '    '+
+                '    <tr>'+
+                '      <td><strong>Annonceur</strong></td>'+
+                '      <td>'+ markers[i].client +'</td>'+
+                '    </tr>'+
+                '    '+
+                '    <tr>'+
+                '      <td><strong>Campagne</strong></td>'+
+                '      <td>'+ markers[i].campagne +'</td>'+
+                '    </tr>'+
+                '    '+
+                '    <tr>'+
+                '      <td><strong>Format</strong></td>'+
+                '      <td>12m²</td>'+
+                '    </tr>'+
+                '    '+
+                '    <tr>'+
+                '      <td><strong>Part de voix</strong></td>'+
+                '      <td>'+ markers[i].partdevoix +'%</td>'+
+                '    </tr>'+
+                '    '+
+                '     <tr>'+
+                '      <td><strong>GRP</strong></td>'+
+                '      <td>15</td>'+
+                '    </tr>'+
+                '  </tbody>'+
+                '</table>'+
+                '</div>'+
                 '</div>'+
                 '</div>';
             infowindow[i] = new google.maps.InfoWindow({
 
-                content : contentString[i]
+                content : contentString[i],
+                maxWidth: 350
             });
 
             var monevent = marker[i];
