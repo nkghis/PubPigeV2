@@ -14,7 +14,7 @@
             {!! Form::close() !!}
         @endcan
         @can('view_visuels')
-            <a class="dropdown-item" href="#{{--{{ route($entity.'.edit', [str_singular($entity) => $id])  }}--}}"><strong><i class="material-icons" style="color: green">my_location</i> Localiser</strong></a>
+            <a class="dropdown-item" href="{{ route('maps.localisation', [str_singular('visuels') => $id])  }}"><strong><i class="material-icons" style="color: green">my_location</i> Localiser</strong></a>
         @endcan
     </div>
 </div>

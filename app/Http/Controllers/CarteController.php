@@ -6,6 +6,7 @@ use App\Campagne;
 use App\Carte;
 use App\Com;
 use App\UserClient;
+use App\Visuel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -112,13 +113,15 @@ class CarteController extends Controller
         $idcampagne = $request->input('campagne');
         $v = new Carte();
         $commune = Com::all();
-        $campagne = Campagne::all();
+        //$campagne = Campagne::all();
         $user_id = Auth::user()->id;
         $user_client = UserClient::where('user_id', '=', $user_id)->first();
 
 
         if (Auth::user()->hasRole('User'))
         {
+            $client_id = $user_client->client_id;
+            $campagne = Campagne::where('Code_Client', '=',$client_id )->get();
             $client_id = $user_client->client_id;
             if ($id == 0 && $idcampagne == 0)
             {
@@ -159,7 +162,7 @@ class CarteController extends Controller
         }
 
         else{
-
+            $campagne = Campagne::all();
             if ($id == 0 && $idcampagne == 0)
             {
 
@@ -206,5 +209,36 @@ class CarteController extends Controller
 
 
 
+    }
+
+    public function localisation($id, Carte $c)
+    {
+        $c = new Carte();
+        if (Auth::user()->hasRole('Admin'))
+        {
+            //$v = new Visuel();
+            //$v = Visuel::find($id);
+
+
+            $visuel = $c->findVisuels($id);
+
+           //dd($visuel);
+            $n = $visuel[0]->idcommune;
+            //dd($n);
+            $cs = Com::find($n);
+
+
+        }
+        else{
+
+            $user_id = Auth::user()->id;
+            $user_client = UserClient::where('user_id', '=', $user_id)->first();
+            $client_id = $user_client->client_id;
+            $visuel = $c->findByClientVisuels($id,$client_id);
+            $n = $visuel[0]->idcommune;
+            $cs = Com::find($n);
+        }
+
+        return view('cartes.localisation', compact('visuel', 'cs'));
     }
 }
