@@ -25,6 +25,10 @@ class VisuelController extends Controller
         if (Auth::user()->hasRole('Admin'))
         {
             $result = $visuel->listVisuels();
+
+            $campagnes = Campagne::all();
+
+            return view('visuels.index', compact('result','campagnes'));
         }
 
         else
@@ -33,9 +37,9 @@ class VisuelController extends Controller
             $user_client = UserClient::where('user_id', '=', $user_id)->first();
             $client_id = $user_client->client_id;
             $result = $visuel->listVisuelsByClient($client_id);
-
+            return view('visuels.index', compact('result'));
         }
-        return view('visuels.index', compact('result'));
+        //return view('visuels.index', compact('result'));
     }
 
     /**
@@ -365,5 +369,56 @@ class VisuelController extends Controller
         );
         echo json_encode($json_data);
 
+    }
+
+
+    public function dupliquer(Request $request)
+    {
+        $this->validate($request, [
+            'campagne-name' => 'required|not_in:0',
+            'campagne-name-dupliquer' => 'required|not_in:0',
+        ]);
+
+        //idcampagne campagne à dupliquer
+        $cad = $request->input('campagne-name');
+
+        //idcampagne dupliquer vers campagne
+        $dvc = $request->input('campagne-name-dupliquer');
+
+        //liste des campagnes a dupluquer
+        $visuels = Visuel::where('idcampagne', '=', $cad)->get();
+
+        //dd($visuels->count());
+
+        //get campagne à dupliquer
+        $cadCampagne = Campagne::find($cad);
+
+        //dupliquer vers campagne
+        $dvcCampagne = Campagne::find($dvc);
+
+        //dd($dvc);
+
+        foreach ($visuels as $visuel)
+        {
+            $v = new Visuel();
+
+            $v->emplacement = $visuel->emplacement;
+            $v->partdevoix = $visuel->partdevoix;
+            $v->latittude = $visuel->latittude;
+            $v->longitude = $visuel->longitude;
+            $v->image = $visuel->image;
+            $v->idclient = $visuel->idclient;
+            $v->idcampagne = $dvc;
+            $v->idcommune = $visuel->idcommune;
+            $v->idregie = $visuel->idregie;
+            $v->estconcurent = $visuel->estconcurent;
+            $v->estconfrere = $visuel->estconfrere;
+            $v->marqueur = $visuel->marqueur;
+            $v->save();
+
+        }
+
+        return redirect()->route('visuels.index')->with('success', 'La campagne ['.$cadCampagne->libelle.'] a été dupliquée avec succès vers la campagne ['.$dvcCampagne->libelle.'] |'.$visuels->count().' visuel(s) ajouté(s)');
+        //dd($campagnes);
     }
 }

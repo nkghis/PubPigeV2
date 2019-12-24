@@ -8,11 +8,37 @@
     {{-- <link href="{{ asset('vendor') }}/DataTables/datatables.css" rel="stylesheet">--}}
     {{--  <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">--}}
     <link href="{{ asset('vendor') }}/DataTables/1.10.16-jquerydataTables.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor') }}/select2/css/select2.min.css" rel="stylesheet">
+
     <style>
         .md-avatar {
             vertical-align: middle;
             width: 50px;
             height: 50px;
+        }
+
+        .nav-tabs {
+            border-bottom:none;
+        }
+
+
+
+        .nav-tabs .nav-link.active {
+            background-color: #3be283;
+            border-bottom:#e2e2e2;
+            font-weight: bold;
+        }
+
+        .tab-pane.active .tab-pane-header {
+            padding:2rem;
+            background-color:#e2e2e2;
+            border-top-right-radius: .5rem;
+            border-top-left-radius: .5rem;
+            margin-bottom:1rem;
+        }
+
+        .tab-pane:first-child .tab-pane-header {
+            border-top-left-radius: 0;
         }
     </style>
 @endsection
@@ -22,24 +48,7 @@
     @include('layouts.headers.cards')
 
 
-    {{--@role('User')--}}
-    {{-- @hasrole('User', 'Admin')--}}
-    {{--<div class="modal" tabindex="-1" role="dialog" id="mymodal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <img src="" alt="Image placeholder" class="img-thumbnail" width="400"  >
-                </div>
-
-            </div>
-        </div>
-    </div>--}}
     <div class="container-fluid mt--7">
 
 
@@ -71,97 +80,57 @@
 
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm" id="data-table">
-                        <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Emplacement</th>
-                            <th>Part de voix</th>
-                            {{-- <th>Latitude</th>
-                             <th>Longitude</th>--}}
-                            <th>Image</th>
-                            <th>Client</th>
-                            <th>Campagne</th>
-                            <th>Commune</th>
-                            <th>Régie</th>
-                            {{--@can('edit_visuels', 'delete_visuels')--}}
-                            <th class="text-center">Actions</th>
-                            {{--@endcan--}}
-                        </tr>
-                        </thead>
-                        {{--  <tbody>
-                          @foreach($result as $item)
-                              <tr>
-                                  <td>{{ $item->id }}</td>
-                                  <td style="word-wrap: break-word;max-width: 460px;white-space:normal;">{{ $item->emplacement }}</td>
-                                  <td>{{ $item->partdevoix }}</td>
-                                 --}}{{-- <td>{{ $item->latitude }}</td>
-                                  <td>{{ $item->longitude }}</td>--}}{{--
-                                  <td>
-                                      --}}{{--<span class="avatar avatar-sm rounded-0">--}}{{--
-                                         --}}{{-- <img id="monimage" src="{{URL::to('/')}}/storage/mesimages/{{$item->image}}" class="md-avatar" >--}}{{--
-                                      --}}{{--</span>--}}{{--
-                                      <button type="button" id="mymodal" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" data-src="{{URL::to('/')}}/storage/mesimages/{{$item->image}}">Voir</button>
+                {{--for Admin--}}
+                @role('Admin')
+                    <div class="row">
+                    <div class="col-md-12">
+                        <nav>
+                            <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                {{--Head Panel Visuel List--}}
+                                <a class="nav-item nav-link active" id="nav-visuel-tab" data-toggle="tab" href="#nav-visuel" role="tab" aria-controls="nav-visuel" aria-selected="true">Visuels</a>
 
-                                  </td>
-                                  <td>{{ $item->client }}</td>
-                                  <td>{{ $item->campagne }}</td>
-                                  <td>{{ $item->commune }}</td>
-                                  <td>{{ $item->regie }}</td>
+                                {{--Head Panel Multi visuel--}}
+                                <a class="nav-item nav-link" id="nav-multi-tab" data-toggle="tab" href="#nav-multi" role="tab" aria-controls="nav-multi" aria-selected="false">Multi-Visuel</a>
 
+                                {{--Head Panel Duplication Campagne--}}
+                                <a class="nav-item nav-link" id="nav-dupliquer-tab" data-toggle="tab" href="#nav-dupliquer" role="tab" aria-controls="nav-dupliquer" aria-selected="false">Duplication campagne</a>
 
-                                  @can('edit_visuels', 'delete_visuels')
-                                      <td class="text-center">
-                                          @include('visuels.shared._action', [
-                                              'entity' => 'visuels',
-                                              'id' => $item->id
-                                          ])
-                                      </td>
-                                  @endcan
-                              </tr>
-                          @endforeach
-                          </tbody>--}}
-                    </table>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            {{--Panel Visuel List--}}
+                            <div class="tab-pane fade show active" id="nav-visuel" role="tabpanel" aria-labelledby="nav-visuel-tab">
+                                @include('visuels.tabs.admin.visuel')
+                            </div>
 
+                            {{--Panel Multi visuel--}}
+                            <div class="tab-pane fade" id="nav-multi" role="tabpanel" aria-labelledby="nav-multi-tab">
+                                @include('visuels.tabs.admin.multi')
 
-                </div>
-            </div>
+                            </div>
 
-        </div>
+                            {{--Panel Duplication Campagne--}}
+                            <div class="tab-pane fade" id="nav-dupliquer" role="tabpanel" aria-labelledby="nav-dupliquer-tab">
+                                @include('visuels.tabs.admin.dupliquer')
 
-   {{-- @else--}}
-        {{--@include('error-permission')--}}
-        {{--@endrole--}}
-        {{--@endhasrole--}}
-        @include('layouts.footers.auth')
+                            </div>
 
-        <!-- Modal -->
-        {{--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div style="width:100px" class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <img style="width:100%" src="https://cdn.pixabay.com/photo/2018/08/06/16/30/mushroom-3587888__340.jpg">
-                </div>
-            </div>
-        </div>--}}
-        <!-- Modal pour affichage image -->
-          {{--  <div class="modal" tabindex="-1" role="dialog" id="myModal">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
                         </div>
-                        <div class="modal-body">
-                            <img --}}{{--src=""--}}{{-- alt="Image placeholder" class="img-thumbnail" width="400"  >
-                        </div>
-
                     </div>
-                </div>
-            </div>--}}
+                    </div>
+                {{--for Admin--}}
+                @else
+                {{--for User--}}
 
 
+                    @include('visuels.tabs.user.visuel')
+
+                {{--for User--}}
+
+                @endrole
+                @include('layouts.footers.auth')
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -169,6 +138,24 @@
     {{--<script src="{{ asset('vendor') }}/DataTables/datatables.js"></script>--}}
     {{--<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>--}}
     <script src="{{ asset('vendor') }}/DataTables/1.10.16-jquerydataTables.min.js"></script>
+    <script src="{{ asset('vendor') }}/select2/js/select2.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $("#input-campagne").select2({
+
+            });
+
+            $("#input-campagne-dupliquer").select2({
+
+            });
+
+            $("#input-regie").select2({
+
+            });
+        });
+    </script>
     <script>
         $('#data-table').DataTable( {
             "processing": true,
@@ -209,7 +196,6 @@
         //Javascript pour affichage image
 
     </script>
-
     <script type="text/javascript">
         $(document).ready(function(){
             $('#pop').on('click', function(e) {
