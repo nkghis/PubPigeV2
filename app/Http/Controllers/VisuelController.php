@@ -27,8 +27,10 @@ class VisuelController extends Controller
             $result = $visuel->listVisuels();
 
             $campagnes = Campagne::all();
+            $communes = Com::all();
+            $regies = Regie::all();
 
-            return view('visuels.index', compact('result','campagnes'));
+            return view('visuels.index', compact('result','campagnes','communes', 'regies'));
         }
 
         else
@@ -375,12 +377,12 @@ class VisuelController extends Controller
     public function dupliquer(Request $request)
     {
         $this->validate($request, [
-            'campagne-name' => 'required|not_in:0',
+            'campagne-named' => 'required|not_in:0',
             'campagne-name-dupliquer' => 'required|not_in:0',
         ]);
 
         //idcampagne campagne à dupliquer
-        $cad = $request->input('campagne-name');
+        $cad = $request->input('campagne-named');
 
         //idcampagne dupliquer vers campagne
         $dvc = $request->input('campagne-name-dupliquer');
@@ -420,5 +422,97 @@ class VisuelController extends Controller
 
         return redirect()->route('visuels.index')->with('success', 'La campagne ['.$cadCampagne->libelle.'] a été dupliquée avec succès vers la campagne ['.$dvcCampagne->libelle.'] |'.$visuels->count().' visuel(s) ajouté(s)');
         //dd($campagnes);
+    }
+
+
+    public function multi(Request $request)
+    {
+
+        $validator = $this->validate($request, [
+
+
+
+            'image' => 'required',
+            //'image.*' => 'mimes:jpeg,jpg|max:2048',
+            'commune-name' => 'required|not_in:0',
+            'campagne-name' => 'required|not_in:0',
+            'regie-name' => 'required|not_in:0',
+        ]);
+        //dd($validator);
+
+        //dd($request->all());
+
+        $files = $request->file('image');
+        //dd($files);
+        $idcommune = $request->input('commune-name');
+        $idcampagne = $request->input('campagne-name');
+        $idregie = $request->input('regie-name');
+        $campagne = Campagne::find($idcampagne);
+        //dd($campagne);
+        $idclient = $campagne->Code_Client;
+
+
+        foreach ($files as $file)
+        {
+
+            $fullfilename = $file->getClientOriginalName();
+
+            //get filename without extension
+            $file_info = pathinfo($fullfilename);
+            $filename = $file_info['filename'];
+
+
+            //Store file
+            $file->storeAs('public/mesimages',$fullfilename);
+
+            //initialise GmapLocation
+            $map = new GmapLocation();
+
+            //Get Path of file
+            $url ='storage/mesimages/'.$fullfilename;
+
+            $imglocation = $map->get_image_location($url);
+            if ($imglocation != false)
+            {
+                $v = new Visuel();
+                $v->emplacement = $filename;
+                $v->partdevoix = 10;
+                $v->latittude = $imglocation['latitude']; /*$request->input('commune-lat')*/;
+                $v->longitude = $imglocation['longitude'];
+                $v->image = $fullfilename;
+                $v->idclient = $idclient;
+                $v->idcampagne = $idcampagne;
+                $v->idcommune = $idcommune;
+                $v->idregie = $idregie;
+                $v->estconcurent = 0;
+                $v->estconfrere = 0;
+                $v->marqueur = 'red';
+                $v->save();
+
+            }
+
+            else
+            {
+                $tableau[] = $filename;
+            }
+
+        }
+
+        if(empty($tableau))
+        {
+            return redirect()->route('visuels.index')->with('success', 'les visuels ont été ajoutés avec succès |');
+        }
+
+        else {
+
+            $list = implode(",", $tableau);
+            return redirect()->route('visuels.index')->with('danger', 'DESOLE !!! Les visuels suivants '.$list.' ne contiennent pas des données de localisation.');
+
+        }
+
+
+
+
+
     }
 }

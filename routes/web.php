@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/visuelList', 'VisuelController@visuelList')->name('visuel.list');
     Route::post('/visuels/dupliquer', 'VisuelController@dupliquer')->name('visuel.dupliquer');
+    Route::post('/visuels/multi', 'VisuelController@multi')->name('visuel.multi');
 
 	Route::resource('user', 'UserController', ['except' => ['show']]);
     Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);

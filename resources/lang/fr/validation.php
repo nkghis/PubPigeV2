@@ -107,7 +107,9 @@ return array(
         'visuel-name' => 'Emplacement',
         'visuel-part' => 'Part de voix',
         'image' => 'Image',
-        'campagne-name-dupliquer' => 'Dupliquer vers campagne'
+        'campagne-name-dupliquer' => 'Dupliquer vers campagne',
+        'campagne-named' => 'Campagne à dupliquer',
+        //'image[]' => 'Images',
 
 
 

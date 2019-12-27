@@ -147,11 +147,19 @@
 
             });
 
+            $("#input-campagned").select2({
+
+            });
+
             $("#input-campagne-dupliquer").select2({
 
             });
 
             $("#input-regie").select2({
+
+            });
+
+            $("#input-commune").select2({
 
             });
         });

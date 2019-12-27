@@ -19,10 +19,10 @@
                 <div class="pl-lg-4">
 
                     <!-- Form select campagne a dupliquer -->
-                    <div class="form-group row {{ $errors->has('campagne-name') ? ' has-danger' : '' }}">
+                    <div class="form-group row {{ $errors->has('campagne-named') ? ' has-danger' : '' }}">
                         <label class="col-md-4 form-control-label text-md-right" for="input-campagne">{{ __('Campagne à dupliquer') }}</label>
                         <div class="col-md-8">
-                            <select name="campagne-name" id="input-campagne" class="form-control form-control-sm{{ $errors->has('campagne-name') ? ' is-invalid' : '' }}"  value="{{ old('campagne-name') }}"  autofocus>
+                            <select name="campagne-named" id="input-campagned" class="form-control form-control-sm{{ $errors->has('campagne-named') ? ' is-invalid' : '' }}"  value="{{ old('campagne-named') }}"  autofocus>
                                 @if($campagnes->count())
                                     <option value="">-- Selectionner la campagne --</option>
                                     @foreach ($campagnes as $campagne)
@@ -30,9 +30,9 @@
                                     @endforeach
                                 @endif
                             </select>
-                            @if ($errors->has('campagne-name'))
+                            @if ($errors->has('campagne-named'))
                                 <span class="invalid-feedback" role="alert">
-                    <strong>{{ $errors->first('campagne-name') }}</strong>
+                    <strong>{{ $errors->first('campagne-named') }}</strong>
                 </span>
                             @endif
                         </div>
