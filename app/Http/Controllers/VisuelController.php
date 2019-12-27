@@ -342,6 +342,8 @@ class VisuelController extends Controller
             foreach ($result as $vs){
                 //create data
                 $nestedData['id'] = $vs->id;
+
+                //$emplacement = $vs->emplacement;
                 $nestedData['emplacement'] = $vs->emplacement;
                 $nestedData['partdevoix'] = $vs->partdevoix;
                 $imagepath = $vs->image;

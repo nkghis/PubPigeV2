@@ -40,6 +40,12 @@
         .tab-pane:first-child .tab-pane-header {
             border-top-left-radius: 0;
         }
+
+        td.highlight {
+            word-wrap: break-word;
+            max-width: 460px;
+            white-space:normal;
+        }
     </style>
 @endsection
 
@@ -193,6 +199,11 @@
                 {"data":"regie"},
                 {"data":"action"},
 
+            ],
+
+            //define class in style to wrap text of emplacement
+            "columnDefs": [
+                { className: "highlight", "targets": [ 1 ] }
             ]
         } );
 
