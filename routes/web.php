@@ -24,7 +24,8 @@
 
 Route::get('/', function () {
     if(Auth::check()){
-        return view('dashboard');
+        //return view('dashboard');
+        return redirect()->route('home');
     }
     return view('auth.login');
 });
