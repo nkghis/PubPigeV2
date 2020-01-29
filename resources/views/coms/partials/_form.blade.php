@@ -30,7 +30,7 @@
 <div class="form-group row {{ $errors->has('commune-lat') ? ' has-danger' : '' }}">
     <label class="col-md-4 form-control-label text-md-right" for="input-lat">{{ __('Latitude') }}</label>
     <div class="col-md-8">
-        <input type="number" step="00.0000001" name="commune-lat" id="input-lat" class="form-control form-control-sm{{ $errors->has('commune-lat') ? ' is-invalid' : '' }}" placeholder="{{ __('4.145236') }}" value="{{ old('commune-lat') }}"  autofocus>
+        <input type="number" step="any" name="commune-lat" id="input-lat" class="form-control form-control-sm{{ $errors->has('commune-lat') ? ' is-invalid' : '' }}" placeholder="{{ __('4.145236') }}" value="{{ old('commune-lat') }}"  autofocus>
 
         @if ($errors->has('commune-lat'))
             <span class="invalid-feedback" role="alert">
@@ -44,7 +44,7 @@
 <div class="form-group row {{ $errors->has('commune-lng') ? ' has-danger' : '' }}">
     <label class="col-md-4 form-control-label text-md-right" for="input-lng">{{ __('Longitude') }}</label>
     <div class="col-md-8">
-        <input type="number" step="00.0000001" name="commune-lng" id="input-lng" class="form-control form-control-sm{{ $errors->has('commune-lng') ? ' is-invalid' : '' }}" placeholder="{{ __('-5.987456') }}" value="{{ old('commune-lng') }}"  autofocus>
+        <input type="number" step="any" name="commune-lng" id="input-lng" class="form-control form-control-sm{{ $errors->has('commune-lng') ? ' is-invalid' : '' }}" placeholder="{{ __('-5.987456') }}" value="{{ old('commune-lng') }}"  autofocus>
 
         @if ($errors->has('commune-lng'))
             <span class="invalid-feedback" role="alert">
