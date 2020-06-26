@@ -45,7 +45,7 @@ class ClientController extends Controller
         if ($request->input('code')!='')
         {
             //dd('1');
-            dd($request->has('code'));
+            //dd($request->has('code'));
             $client = new Client();
             $client->Raison_Soc = $request->input('raison-soc');
             $client->code = $request->input('code');
