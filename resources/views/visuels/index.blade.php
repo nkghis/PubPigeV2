@@ -143,6 +143,7 @@
 @section('script')
     {{--<script src="{{ asset('vendor') }}/DataTables/datatables.js"></script>--}}
     {{--<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>--}}
+    <script src="{{ mix('js/app.js') }}"></script>
     <script src="{{ asset('vendor') }}/DataTables/1.10.16-jquerydataTables.min.js"></script>
     <script src="{{ asset('vendor') }}/select2/js/select2.min.js"></script>
 

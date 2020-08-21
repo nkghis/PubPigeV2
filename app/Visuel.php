@@ -255,4 +255,19 @@ class Visuel extends Model
             ->count();
         return $result;
     }
+
+    public function campagne()
+    {
+        return $this->belongsTo('App\Campagne');
+    }
+
+    public function com()
+    {
+        return $this->belongsTo('App\Com');
+    }
+
+    public function regie()
+    {
+        return $this->belongsTo('App\Regie');
+    }
 }

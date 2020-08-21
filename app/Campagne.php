@@ -11,6 +11,10 @@ class Campagne extends Model
     protected $primaryKey = 'code';
     public $incrementing = false;
 
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+    ];
+
     public function listCampagne()
     {
         $result = DB::table('campagnes')
@@ -21,4 +25,31 @@ class Campagne extends Model
             ->get();
         return $result;
     }
+
+    public function client()
+    {
+        return $this->belongsTo('App\Client');
+    }
+
+    public function marque()
+    {
+        return $this->belongsTo('App\Marque');
+    }
+
+    public function produit()
+    {
+        return $this->belongsTo('App\Produit');
+    }
+
+    public function visuels()
+    {
+        return $this->hasMany('App\Visuel');
+    }
+
+    public function getDebutAttribute()
+    {
+        return $this->attributes['DP_Campagne'];
+    }
+
+
 }

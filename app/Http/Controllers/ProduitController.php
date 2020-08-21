@@ -45,7 +45,14 @@ class ProduitController extends Controller
 
         $produit = new Produit();
         $p = Produit::latest()->first();
-        $code = $p->code +1;
+
+        if ($p == null)
+        {
+            $code = 1;
+        }else{
+            $code = $p->code +1;
+        }
+
         $produit->code = $code;
         $produit->libelle = $request->input('produit-name');
         $produit->Code_Marque = $request->input('marque-name');

@@ -20,4 +20,9 @@ class Client extends Model
     {
         return $this->belongsToMany(User::class,'userclients');
     }
+
+    public function campagnes()
+    {
+        return $this->hasMany('App\Campagne');
+    }
 }

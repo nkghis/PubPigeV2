@@ -102,7 +102,7 @@
                             <td>12m²</td>
                         </tr>
 
-                        <tr>
+                        {{--<tr>
                             <td><strong>Part de voix</strong></td>
                             <td>{{$visuel[0]->partdevoix}}</td>
                         </tr>
@@ -110,7 +110,7 @@
                         <tr>
                             <td><strong>GRP</strong></td>
                             <td>15</td>
-                        </tr>
+                        </tr>--}}
                         </tbody>
                     </table>
                 </div>
@@ -286,7 +286,9 @@
 </script>--}}
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=appkey&callback=initMap" async defer></script>
+{{--<script src="https://maps.googleapis.com/maps/api/js?key=appkey&callback=initMap" async defer></script>--}}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFFwXNKrYiQnaL-6kPhBxqn3SPsZE7mr0&callback=initMap" async defer></script>
+
 
 <script>
 

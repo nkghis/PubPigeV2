@@ -114,6 +114,25 @@
     </div>
 </div>
 
+<!-- Form Radio Option -->
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-8 text-left">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="inlineRadio1" value="red" {{ $visuels->marqueur == 'red' ? 'checked' : ''}}>
+            <label class="form-check-label" for="inlineRadio1"><strong style="color:red">defaut</strong></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="inlineRadio2" value="yellow" {{ $visuels->marqueur == 'yellow' ? 'checked' : ''}}>
+            <label class="form-check-label" for="inlineRadio2"><strong style="color:yellow">Concurrent</strong></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="inlineRadio3" value="blue" {{ $visuels->marqueur == 'blue' ? 'checked' : ''}}>
+            <label class="form-check-label" for="inlineRadio3"><strong style="color:blue">Confrère</strong></label>
+        </div>
+    </div>
+</div>
+
 <!-- Form image -->
 <div class="form-group row {{ $errors->has('image') ? ' has-danger' : '' }}">
     <label class="col-md-4 form-control-label text-md-right" for="input-image">{{ __('Image') }}</label>

@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use App\Campagne;
 use App\Client;
 use App\Com;
 use App\GmapLocation;
+use App\Http\Resources\VisuelResource;
 use App\Regie;
 use App\User;
 use App\UserClient;
@@ -20,7 +23,7 @@ class VisuelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Visuel $visuel)
+    public function index(Visuel $visuel, Request $request)
     {
         if (Auth::user()->hasRole('Admin'))
         {
@@ -30,7 +33,21 @@ class VisuelController extends Controller
             $communes = Com::all();
             $regies = Regie::all();
 
-            return view('visuels.index', compact('result','campagnes','communes', 'regies'));
+
+
+            if ($request->is('api/*'))
+            {
+                return response()->json($result, 201);
+
+                //return VisuelResource::collection($result);
+
+            }
+
+            else{
+                return view('visuels.index', compact('result','campagnes','communes', 'regies'));
+            }
+
+            //return view('visuels.index', compact('result','campagnes','communes', 'regies'));
         }
 
         else
@@ -65,27 +82,46 @@ class VisuelController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'visuel-name' => 'required',
-            'visuel-part' => 'required',
-            /*'commune-lat' => 'required',
-            'commune-lng' => 'required',*/
-            'image' => 'required|file|image|mimes:jpeg,jpg|max:2048',
-            'commune-name' => 'required|not_in:0',
-            'campagne-name' => 'required|not_in:0',
-            'regie-name' => 'required|not_in:0',
-        ]);
-
-        //dd($request);
-
-        if ($request->input('option')==false)
+        //dd($request->all());
+        if ($request->is('api/*'))
         {
-            $concurent = 0;
-            $confrere =0;
-            $marqueur = 'red';
-            //dd($marqueur);
-        }
-        else{
+            $rules = [
+                'visuel-name' => 'required',
+                /* 'visuel-part' => 'required',*/
+                'commune-lat' => 'required',
+                'commune-lng' => 'required',
+                'image' => 'required',
+                'commune-name' => 'required',
+                'campagne-name' => 'required',
+                'regie-name' => 'required',
+            ];
+            $input  =$request->all();
+
+            $validator = Validator::make($input, $rules);
+            if ($validator->fails())
+            {
+                return response()->json($validator->messages(), 400);
+            }
+
+            //Decode base 64 image
+            $image = $request->image;  // your base64 encoded
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $filename = Str::random(10) . '.jpg';
+
+            //Store image decode base 64 to staorage. disk argument can find at config/filesystems.php in local
+            Storage::disk('i')->put($filename, base64_decode($image));
+
+            //return 'test';
+
+            if ($request->input('option')==false)
+            {
+                $concurent = 0;
+                $confrere =0;
+                $marqueur = 'red';
+                //dd($marqueur);
+            }
+            else{
                 if ($request->input('option') == 0)
                 {
                     $concurent = 1;
@@ -99,35 +135,17 @@ class VisuelController extends Controller
                     $marqueur = 'blue';
                     //dd($marqueur);
                 }
-        }
+            }
 
-        //$p = 'yellow';
-        //dd($request);
 
-        /*Get image file name original*/
-        $filename = $request->file('image')->getClientOriginalName();
-
-        //Store file
-        $request->file('image')->storeAs('public/mesimages',$filename);
-
-        //initialise GmapLocation
-        $map = new GmapLocation();
-
-        //Get Path of file
-        $url ='storage/mesimages/'.$filename;
-
-        //Check If file existing
-        $imglocation = $map->get_image_location($url);
-        if ($imglocation != false)
-        {
             $idcampagne = $request->input('campagne-name');
             $campagne = Campagne::find($idcampagne);
             $idclient = $campagne->Code_Client;
             $v = new Visuel();
             $v->emplacement = $request->input('visuel-name');
             $v->partdevoix = $request->input('visuel-part');
-            $v->latittude = $imglocation['latitude']; /*$request->input('commune-lat')*/;
-            $v->longitude = $imglocation['longitude'];/*$request->input('commune-lng');*/
+            $v->latittude = $request->input('commune-lat'); /*$request->input('commune-lat')*/;
+            $v->longitude = $request->input('commune-lng');/*$request->input('commune-lng');*/
             $v->image = $filename; /*$request->input('image-name');*/
             $v->idclient = $idclient;
             $v->idcampagne = $request->input('campagne-name');
@@ -137,12 +155,181 @@ class VisuelController extends Controller
             $v->estconfrere = $confrere;
             $v->marqueur = $marqueur;
             $v->save();
-            return redirect()->route('visuels.index')->with('success', 'Visuel ajouté avec succès |'.$v->emplacement);
+
+            return response()->json($v, 201);
         }
-        else
-        {
-            return redirect()->route('visuels.index')->with('danger', 'DESOLE !!! La photo du visuel nommée ne contient pas des données de localisation.');
+        else{
+
+
+            if($request->has('check-coordonnees')){
+                //Checkbox checked
+
+                $this->validate($request, [
+                    'visuel-name' => 'required',
+                    /* 'visuel-part' => 'required',*/
+                    'commune-lat' => 'required',
+                    'commune-lng' => 'required',
+                    'image' => 'required|file|image|mimes:jpeg,jpg|max:2048',
+                    'commune-name' => 'required|not_in:0',
+                    'campagne-name' => 'required|not_in:0',
+                    'regie-name' => 'required|not_in:0',
+                ]);
+
+            }else{
+
+
+                //Checkbox not checked
+
+                $this->validate($request, [
+                    'visuel-name' => 'required',
+                    /* 'visuel-part' => 'required',*/
+                    /*'commune-lat' => 'required',
+                    'commune-lng' => 'required',*/
+                    'image' => 'required|file|image|mimes:jpeg,jpg|max:2048',
+                    'commune-name' => 'required|not_in:0',
+                    'campagne-name' => 'required|not_in:0',
+                    'regie-name' => 'required|not_in:0',
+                ]);
+            }
+
+
+
+            //dd($request);
+
+          /*  if ($request->input('option')==false)
+            {
+                $concurent = 0;
+                $confrere =0;
+                $marqueur = 'red';
+                //dd($marqueur);
+            }
+            else{
+                if ($request->input('option') == 0)
+                {
+                    $concurent = 1;
+                    $confrere =0;
+                    $marqueur = 'yellow';
+                    //dd($marqueur);
+                }
+                else{
+                    $concurent = 0;
+                    $confrere =1;
+                    $marqueur = 'blue';
+                    //dd($marqueur);
+                }
+            }*/
+
+            $marqueur = $request->input('option');
+
+            switch ($marqueur){
+                case "red" :
+                    $concurent = 0;
+                    $confrere =0;
+                  /*  $marqueur = $option;*/
+
+                    break;
+                case "yellow" :
+                    $concurent = 1;
+                    $confrere =0;
+                  /*  $marqueur = $option;*/
+
+                    break;
+                case "blue" :
+                    $concurent = 0;
+                    $confrere =1;
+                  /*  $marqueur = $option;*/
+
+                    break;
+            }
+
+            //dd($marqueur, $concurent, $confrere);
+
+
+
+            //$p = 'yellow';
+            //dd($request);
+
+            /*Get image file name original*/
+            $filename = $request->file('image')->getClientOriginalName();
+
+            //Store file
+            $request->file('image')->storeAs('public/mesimages',$filename);
+
+            //initialise GmapLocation
+            $map = new GmapLocation();
+
+            //Get Path of file
+            $url ='storage/mesimages/'.$filename;
+
+            //Check If file existing
+            $imglocation = $map->get_image_location($url);
+            if ($imglocation != false)
+            {
+                $idcampagne = $request->input('campagne-name');
+                $campagne = Campagne::find($idcampagne);
+                $idclient = $campagne->Code_Client;
+                $v = new Visuel();
+                $v->emplacement = $request->input('visuel-name');
+                $v->partdevoix = $request->input('visuel-part');
+                $v->latittude = $imglocation['latitude']; /*$request->input('commune-lat')*/;
+                $v->longitude = $imglocation['longitude'];/*$request->input('commune-lng');*/
+                $v->image = $filename; /*$request->input('image-name');*/
+                $v->idclient = $idclient;
+                $v->idcampagne = $request->input('campagne-name');
+                $v->idcommune = $request->input('commune-name');
+                $v->idregie = $request->input('regie-name');
+                $v->estconcurent = $concurent;
+                $v->estconfrere = $confrere;
+                $v->marqueur = $marqueur;
+                $v->save();
+                return redirect()->route('visuels.index')->with('success', 'Visuel ajouté avec succès |'.$v->emplacement);
+            }
+            else
+            {
+                if($request->has('check-coordonnees')){
+                    //Checkbox checked
+
+                    $idcampagne = $request->input('campagne-name');
+                    $campagne = Campagne::find($idcampagne);
+                    $idclient = $campagne->Code_Client;
+
+                    $filename = $request->file('image')->getClientOriginalName();
+                    $request->file('image')->storeAs('public/mesimages',$filename);
+                    //$v->image = $filename;
+
+                    $v = new Visuel();
+                    $v->emplacement = $request->input('visuel-name');
+                    $v->partdevoix = $request->input('visuel-part');
+                    $v->latittude = $request->input('commune-lat');
+                    $v->longitude = $request->input('commune-lng');
+                    $v->image = $filename; /*$request->input('image-name');*/
+                    $v->idclient = $idclient;
+                    $v->idcampagne = $request->input('campagne-name');
+                    $v->idcommune = $request->input('commune-name');
+                    $v->idregie = $request->input('regie-name');
+                    $v->estconcurent = $concurent;
+                    $v->estconfrere = $confrere;
+                    $v->marqueur = $marqueur;
+                    $v->save();
+                    return redirect()->route('visuels.index')->with('success', 'Visuel ajouté avec succès |'.$v->emplacement);
+
+
+
+                }else {
+
+
+                    return redirect()->route('visuels.index')->with('danger', 'DESOLE !!! La photo du visuel nommée ne contient pas des données de localisation.');//Checkbox not checked
+
+                }
+
+
+            }
         }
+
+
+
+
+
 
 
 
@@ -193,7 +380,7 @@ class VisuelController extends Controller
         //dd($request);
         $this->validate($request, [
             'visuel-name' => 'required',
-            'visuel-part' => 'required',
+           /* 'visuel-part' => 'required',*/
             'commune-lat' => 'required',
             'commune-lng' => 'required',
             'image' => 'file|image|mimes:jpeg,jpg|max:2048',

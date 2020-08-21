@@ -42,7 +42,14 @@ class RegieController extends Controller
         ]);
         $regie = new Regie();
         $r = Regie::latest()->first();
-        $code = $r->code +1;
+        if ($r ==null)
+        {
+            $code = 1;
+        }
+        else{
+            $code = $r->code +1;
+        }
+
         $regie->code = $code;
         $regie->Raison_Soc = $request->input('regie-name');
         $regie->save();

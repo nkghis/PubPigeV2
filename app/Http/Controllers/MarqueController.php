@@ -43,7 +43,16 @@ class MarqueController extends Controller
             'client-name' => 'required',
         ]);
         $m = Marque::latest()->first();
-        $code = $m->code +1;
+
+        if ($m == null)
+        {
+            $code = 1;
+        }
+        else
+        {
+            $code = $m->code +1;
+        }
+
         //dd($code);
         $marques = new Marque();
         $marques->code = $code;

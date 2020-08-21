@@ -26,6 +26,56 @@
     </div>
 </div>
 
+<!-- Form Check add lat & lng -->
+<div class="form-group row {{ $errors->has('visuel-part') ? ' has-danger' : '' }}">
+    <label class="col-md-4 form-control-label text-md-right" for="input-part"></label>
+    <div class="form-check col-md-8">
+        <input class="form-check-input" name="check-coordonnees" type="checkbox" value="1" id="defaultCheck1" onchange="showMe('check')">
+        <label class="form-check-label" for="defaultCheck1">
+            <strong>Ajouter longitude et latitude</strong>
+        </label>
+    </div>
+</div>
+
+<!-- div lat & lng -->
+<div id="check"  style="display:none">
+    <!-- Form Input Latitude -->
+    <div class="form-group row {{ $errors->has('commune-lat') ? ' has-danger' : '' }}">
+        <label class="col-md-4 form-control-label text-md-right" for="input-lat">{{ __('Latitude') }}</label>
+        <div class="col-md-8">
+            <input type="number" step="any" name="commune-lat" id="input-lat" class="form-control form-control-sm{{ $errors->has('commune-lat') ? ' is-invalid' : '' }}" placeholder="{{ __('4.145236') }}" value="{{ old('commune-lat') }}"  autofocus>
+
+            @if ($errors->has('commune-lat'))
+                <span class="invalid-feedback" role="alert">
+            <strong>{{ $errors->first('commune-lat') }}</strong>
+        </span>
+            @endif
+        </div>
+    </div>
+
+    <!-- Form Input Longitude -->
+    <div class="form-group row {{ $errors->has('commune-lng') ? ' has-danger' : '' }}">
+        <label class="col-md-4 form-control-label text-md-right" for="input-lng">{{ __('Longitude') }}</label>
+        <div class="col-md-8">
+            <input type="number" step="any"  name="commune-lng" id="input-lng" class="form-control form-control-sm{{ $errors->has('commune-lng') ? ' is-invalid' : '' }}" placeholder="{{ __('-5.987456') }}" value="{{ old('commune-lng') }}"  autofocus>
+
+            @if ($errors->has('commune-lng'))
+                <span class="invalid-feedback" role="alert">
+            <strong>{{ $errors->first('commune-lng') }}</strong>
+        </span>
+            @endif
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
 {{--
 <!-- Form Input Latitude -->
 <div class="form-group row {{ $errors->has('commune-lat') ? ' has-danger' : '' }}">
@@ -120,15 +170,19 @@
 
 <div class="row">
     <div class="col-md-4"></div>
-    <div class="col-md-6 text-left">
-    <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="option" id="inlineRadio1" value="0">
-        <label class="form-check-label" for="inlineRadio1"><strong style="color:yellow">Concurrent</strong></label>
-    </div>
-    <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="option" id="inlineRadio2" value="1">
-        <label class="form-check-label" for="inlineRadio2"><strong style="color:blue">Confrère</strong></label>
-    </div>
+    <div class="col-md-8 text-left">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="inlineRadio1" value="red" checked>
+            <label class="form-check-label" for="inlineRadio1"><strong style="color:red">defaut</strong></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="inlineRadio2" value="yellow">
+            <label class="form-check-label" for="inlineRadio2"><strong style="color:yellow">Concurrent</strong></label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="inlineRadio2" value="blue">
+            <label class="form-check-label" for="inlineRadio2"><strong style="color:blue">Confrère</strong></label>
+        </div>
     </div>
 </div>
 

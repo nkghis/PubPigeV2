@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use DB;
 //use Yajra\DataTables\Facades\DataTables;
@@ -12,19 +16,33 @@ use DB;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the users
      *
      * @param  \App\User  $model
      * @return \Illuminate\View\View
+     *
      */
     public function index(Request $request)
     {
 
-        //$result = User::latest()->paginate();
         $result = User::all();
 
-        return view('users.index',compact('result'));
+        if ($request->is('api/*'))
+        {
+            //return response()->json($result);
+            return UserResource::collection($result);
+        }
+
+        else
+        {
+            return view('users.index',compact('result'));
+        }
+
+        //return 'test';
+
+
 
     }
 
@@ -50,16 +68,49 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $this->validate($request, [
 
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|same:confirm-password',
-            'roles' => 'required'
-
-        ]);
 
         $input = $request->all();
+
+        //Check if request is Api or Web
+        if ($request->is('api/*'))
+        {
+            $rules = [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required',
+                'roles' => 'required'
+            ];
+
+        }else{
+            $rules = [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|same:confirm-password',
+                'roles' => 'required'
+            ];
+        }
+
+
+        //Create validator
+        $validator = Validator::make($input, $rules);
+
+        //Check if have error
+        if ($validator->fails())
+        {
+            if ($request->is('api/*'))
+            {
+                return response()->json($validator->messages(), 400);
+            }
+            else{
+                return redirect()->route('user.create')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+        }
+
+
 
         $input['password'] = Hash::make($input['password']);
 

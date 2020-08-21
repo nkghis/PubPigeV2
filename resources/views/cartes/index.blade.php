@@ -195,7 +195,7 @@
                 '      <td><strong>Format</strong></td>'+
                 '      <td>12m²</td>'+
                 '    </tr>'+
-                '    '+
+                /*'    '+
                 '    <tr>'+
                 '      <td><strong>Part de voix</strong></td>'+
                 '      <td>'+ markers[i].partdevoix +'%</td>'+
@@ -204,7 +204,7 @@
                 '     <tr>'+
                 '      <td><strong>GRP</strong></td>'+
                 '      <td>15</td>'+
-                '    </tr>'+
+                '    </tr>'+*/
                 '  </tbody>'+
                 '</table>'+
                 '</div>'+

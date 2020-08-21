@@ -37,6 +37,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
 
+    Route::get('mytoken', 'TokenController@index')->name('token');
     Route::get('maps/bycommune', 'CarteController@bycommune')->name('maps.bycommune');
     Route::get('maps/{id}', 'CarteController@localisation')->name('maps.localisation');
 

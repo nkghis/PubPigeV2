@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Campagne;
 use App\Client;
+use App\Http\Resources\CampagneResource;
 use App\Marque;
 use App\Produit;
 use Illuminate\Http\Request;
@@ -15,11 +16,21 @@ class CampagneController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Campagne $campagne)
+    public function index(Campagne $campagne, Request $request)
     {
-        //$result = Campagne::all();
         $result = $campagne->listCampagne();
-        return view('campagnes.index', compact('result'));
+
+        if ($request->is('api/*'))
+        {
+            ///return CampagneResource::collection($result);
+            return response()->json($result, 201);
+        }
+        else
+        {
+            return view('campagnes.index', compact('result'));
+        }
+
+
     }
 
     /**
@@ -45,18 +56,28 @@ class CampagneController extends Controller
     {
         $this->validate($request, [
             'campagne-name' => 'required',
-            'dp-campagne' => 'required',
+            /*'dp-campagne' => 'required',
             'fp-campagne' => 'required',
             'code-pays' => 'required',
             'etat-campagne' => 'required',
-            'duree-campagne' => 'required',
+            'duree-campagne' => 'required',*/
             'client-name' => 'required',
             'produit-name' => 'required',
             'marque-name' => 'required',
         ]);
 
         $c = Campagne::latest()->first();
-        $code = $c->code + 1;
+
+        if ($c == null)
+        {
+            $code = 1;
+
+        }
+        else{
+
+            $code = $c->code + 1;
+        }
+
 
         $campagne = new Campagne();
         $campagne->code = $code;
@@ -70,7 +91,15 @@ class CampagneController extends Controller
         $campagne->Code_Produit = $request->input('produit-name');
         $campagne->Code_Marque = $request->input('marque-name');
         $campagne->save();
-        return redirect()->route('campagnes.index')->with('success', 'Campagne ajouté avec succès | '.$campagne->libelle);
+
+        if ($request->is('api*'))
+        {
+            return new CampagneResource($campagne, 201);
+        }
+        else{
+            return redirect()->route('campagnes.index')->with('success', 'Campagne ajouté avec succès | '.$campagne->libelle);
+        }
+
 
 
     }

@@ -19,4 +19,9 @@ class Marque extends Model
             ->get();
         return $result;
     }
+
+    public function campagnes()
+    {
+        return $this->hasMany('App\Campagne');
+    }
 }

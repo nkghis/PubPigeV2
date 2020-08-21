@@ -12,11 +12,19 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //$result = Client::latest()->paginate();
         $result = Client::all();
-        return view('clients.index', compact('result'));
+        if ($request->is('api/*'))
+        {
+         return response()->json($result, 201);
+        }
+        else
+            {
+            return view('clients.index', compact('result'));
+        }
+
     }
 
     /**
@@ -62,7 +70,14 @@ class ClientController extends Controller
         }
 
         $client->save();
-        return redirect()->route('clients.index')->with('success','Client crée avec succès');
+
+        if ($request->is('api/*'))
+        {
+            return response()->json($client, 201);
+        }else{
+            return redirect()->route('clients.index')->with('success','Client crée avec succès');
+        }
+
 
 
 

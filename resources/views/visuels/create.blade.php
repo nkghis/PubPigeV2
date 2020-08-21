@@ -69,6 +69,25 @@
 
             });
         });
+
+
+
+    </script>
+
+
+    {{--For input Lat& lng--}}
+    <script type="text/javascript">
+        <!--
+        function showMe (box) {
+            var chboxs = document.getElementById("check").style.display;
+            var vis = "none";
+            if(chboxs=="none"){
+                vis = "block"; }
+            if(chboxs=="block"){
+                vis = "none"; }
+            document.getElementById(box).style.display = vis;
+        }
+        //-->
     </script>
 
 @endsection
