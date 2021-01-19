@@ -34,6 +34,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/map', 'CarteController@map_sidebar')->name('sidebar');
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -56,6 +57,8 @@ Route::group(['middleware' => 'auth'], function () {
    
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
+
+   // Route::get('/map', 'CarteController@map_sidebar')->name('sidebar');
     Route::resource('roles','RoleController');
     Route::resource('clients','ClientController');
     Route::resource('access','AccesController');

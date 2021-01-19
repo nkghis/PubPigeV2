@@ -241,4 +241,11 @@ class CarteController extends Controller
 
         return view('cartes.localisation', compact('visuel', 'cs'));
     }
+
+    public function map_sidebar(Visuel $v){
+
+        $visuel = $v->listVisuels();
+        //dd($v);
+        return view('map-sidebar-test', compact('visuel'));
+    }
 }

@@ -417,6 +417,7 @@ class VisuelController extends Controller
         $v->idcampagne = $request->input('campagne-name');
         $v->idcommune = $request->input('commune-name');
         $v->idregie = $request->input('regie-name');
+        $v->marqueur = $request->input('option');
         $v->save();
         return redirect()->route('visuels.index')->with('success', 'Visuel mis à jour avec succès |'.$v->emplacement);
 

@@ -264,7 +264,13 @@
 </script>--}}
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=appkey0&callback=initMap" async defer></script>
+{{--
+<script src="https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAFFwXNKrYiQnaL-6kPhBxqn3SPsZE7mr0&center=47.65,-122.35&zoom=12&format=png&maptype=roadmap&size=480x360" async defer></script>
+--}}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFFwXNKrYiQnaL-6kPhBxqn3SPsZE7mr0&callback=initMap" async defer></script>
+
+{{--https://maps.googleapis.com/maps/api/staticmap?key=YOUR_API_KEY&center=47.65,-122.35&zoom=12&format=png&maptype=roadmap&size=480x360--}}
 
 <script>
 
